@@ -1,0 +1,21 @@
+{
+    "builder": {
+        "variables": {},
+        "libs": []
+    },
+    "deviceGroups": {
+        "1625cd45-328e-3ffe-231d-b3b98f4171ad": {
+            "agentFile": "/Examples/agent.nut",
+            "deviceFile": "/Examples/device.nut",
+            "endpoint": "https://api.imp.eatonem.com/v5",
+            "accountID": "aa00c226-2850-1df5-9b22-8c8c37e989b9",
+            "isDefault": true,
+            "dgType": "Development",
+            "description": "E0088611 (AE) Development",
+            "builder": {
+                "variables": {
+                }
+            }
+        }
+    }
+}
