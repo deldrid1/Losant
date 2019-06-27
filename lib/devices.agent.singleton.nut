@@ -215,7 +215,7 @@ REST.Losant.devices <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("POST", format(this._path + "/command?%s", deviceID, http.urlencode(params)), body, false, bodyEncoder, bodyDecoder)
+        return this.send("POST", format(this._path + "/command?%s", deviceID, http.urlencode(params)), body, {}, false, bodyEncoder, bodyDecoder)
     }
 }
 

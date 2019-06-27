@@ -38,7 +38,7 @@ const LOSANT_APPLICATION_ID = "@{LOSANT_APPLICATION_ID}";
 const LOSANT_API_TOKEN      = "@{LOSANT_API_TOKEN}"
 
 REST.Losant.init(LOSANT_APPLICATION_ID, LOSANT_API_TOKEN)
-// REST._debug = true;
+REST._debug = true;
 
 function losantCommandHandler(cmd) {
     // Keys: "name", "time", "payload"
@@ -86,16 +86,17 @@ REST.Losant.devices.get()
         }
     }.bindenv(this))
     //TODO: Trade out our API Token for a Device Access Key with limited permissions - this should really happen automatically under the hood...
-    // .then(function(deviceID){
-    //     // Retreive device scoped key from nonvol
-    //     // If it does not exist, ...
-
-    //     REST.Losant.applicationKeys.create()
-    //         .then(function(body){
-    //             // Store the secret and access key into nonvol
-    //             REST.Losant.init(LOSANT_APPLICATION_ID, body.key)
-    //         }.bindenv(this))
-    // })
+    .then(function(deviceID){
+        // Retreive device scoped key from nonvol
+        return REST.Losant.applicationKeys.create({"tokenTTL" : 8})
+            .then(function(body){
+                // Store the following into nonvol
+                    // REST.Losant.device.applicationKeyId = null,    //TODO: Not sure if this is necessary beyond deleting the key?
+                    // REST.Losant.device.applicationKey = null,
+                    // REST.Losant.device.applicationKeySecret = null,
+                    return deviceID
+            }.bindenv(this))
+    })
     .then(function(deviceID){
          // Make sure the attributes and tags in Losant match the current code.
         local attributes = [
@@ -745,13 +746,16 @@ REST.Losant.devices.get()
         ]
 
         return REST.Losant.device.update({
-            "attributes": attributes,
-            "tags": REST.Losant.tblAssign(tags, REST.Losant.device.tags)
+            // "attributes": attributes,
+            // "tags": REST.Losant.tblAssign(tags, REST.Losant.device.tags)
         });
     }.bindenv(this))
-    .then(function(deviceID){
+    .then(function(body){
         server.log("Opening streaming listener...");
         return REST.Losant.device.openCommandStream(losantCommandHandler.bindenv(this), losantCommandStreamError.bindenv(this));
+    }.bindenv(this))
+    .fail(function(err){
+        PrettyPrinter.print(err)
     }.bindenv(this))
 
 // =============================================================================

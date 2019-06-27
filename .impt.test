@@ -7,6 +7,6 @@
   "testFiles": [
     "tests/*test.nut",
     "tests/**/*test.nut"
-
-  ]
+  ],
+  "builderConfig": ".impt.test.builder"
 }

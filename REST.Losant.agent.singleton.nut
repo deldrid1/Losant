@@ -8,9 +8,10 @@ const REST_LOSANT_BASEURL = "https://api.losant.com"
 
 REST.Losant <- {
 
-    _baseURL              = null,   // Base URL we will communicate with - defaults to `${REST_LOSANT_BASEURL}/${idApplication}`
+    _baseURL              = null,   // Base URL we will communicate with - defaults to `${REST_LOSANT_BASEURL}/`
+    _basePath             = null,   // Base path we will communicate with -`applications/${idApplication}/`
     _idApplication        = null,   // Losant Application ID
-    _headers              = null,   // HTTP Headers for use in the client
+    _headers              = null,   // Base HTTP Headers for use in the client
 
     /**
     * Initializes the LosantREST class for use.  This method should be called before any other methods are used
@@ -25,7 +26,8 @@ REST.Losant <- {
     */
     init = function(idApplication, apiToken, baseURL = REST_LOSANT_BASEURL){
         this._idApplication = idApplication
-        this._baseURL = urlNormalize(baseURL) + "applications/" + idApplication + "/"
+        this._baseURL = urlNormalize(baseURL)
+        this._basePath = pathNormalize("applications/" + idApplication + "/")
 
         this._headers = {
             "Content-Type":   "application/json"
@@ -43,7 +45,7 @@ REST.Losant <- {
     *
     * @param  {string}   method      The HTTP method to execute ["PUT", "POST", "DELETE", "GET", etc...]
     * @param  {string}   path        The path to append to the _baseURL to send the payload to
-    * @param  {string}   headers     The HTTP headers
+    * @param  {string}   headers     Any HTTP header overrides.  This will be "tblAssign"ed into this._headers to create the full set
     * @param  {object}   body        The HTTP body.  This will be encoded with the bodyEncoder before sending the data.
     * @param  {function} bodyEncoder A function which accepts one argument **data** and returns the encoded data as a string.  Defaults to `http.jsonencode`.
     * @param  {function} bodyDecoder A function which accepts one argument **data** and returns the decoded data as a string.  Defaults to `http.jsondecode`.
@@ -52,8 +54,8 @@ REST.Losant <- {
                 - .then(parsedResponse) {object} Parsed Response data or full http response table
                 - .fail(error) {string}
     */
-    send = function(method, path, body = "", returnFullResponse = false, bodyEncoder = http.jsonencode.bindenv(http), bodyDecoder = http.jsondecode.bindenv(http)){
-        return this.createRequestPromise(method, this._baseURL + this.pathNormalize(path), this._headers, body, returnFullResponse, bodyEncoder, bodyDecoder)
+    send = function(method, path, body = "", headers = {}, returnFullResponse = false, bodyEncoder = http.jsonencode.bindenv(http), bodyDecoder = http.jsondecode.bindenv(http)){
+        return this.createRequestPromise(method, this._baseURL + this._basePath + this.pathNormalize(path), this.tblAssign(clone(this._headers), headers), body, returnFullResponse, bodyEncoder, bodyDecoder)
                     .fail(function(err){
 
                         // Check if error is an HTTP Response object
@@ -172,6 +174,7 @@ REST.Losant <- {
         }
     }
 
+    // Takes all the keys in source, and puts them into target (overwritting target as needed)
     function tblAssign(target, source){
         foreach(k,v in source){
             target[k] = v
@@ -184,10 +187,11 @@ REST.Losant <- {
 REST.Losant.setdelegate(REST)
 
 // Now include all of our implementation!
+@include once "./lib/applicationKeys.agent.singleton.nut"
+@include once "./lib/auth.agent.singleton.nut"
 @include once "./lib/device.agent.singleton.nut"
 @include once "./lib/devices.agent.singleton.nut"
 @include once "./lib/events.agent.singleton.nut"
-
 
 // =============================================================================
 // ------------------------------------------------------------- END_REST_LOSANT

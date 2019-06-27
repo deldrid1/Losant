@@ -1,5 +1,5 @@
 @include once "github:electricimp/Promise/Promise.lib.nut@v4.0.0"
-@include once "github:deldrid1/PrettyPrinter/PrettyPrinter.singleton.nut@v1.0.2"
+@include once "github:deldrid1/PrettyPrinter/PrettyPrinter.singleton.nut@v1.0.2"    // Enables pretty logging debugging
 
 // =============================================================================
 // REST ------------------------------------------------------------------------
@@ -24,15 +24,19 @@ REST <- {
     }
 
     /**
-    * Normalize the starting "/" for a URL by ensureing that it is never included
+    * Normalize the starting "/" for a URL by ensuring that it is never included and that the trailing "/" is included if ensureTrailingSlashIncluded == true
     *
     * @method pathNormalize
     *
     * @param  {string}  path  The path to normalize
+    * @param  {boolean} ensureTrailingSlashIncluded  Should the trailing "/" condition be checked and enforced
     *
     * @return {string} The normalized path
     */
-    pathNormalize = function(path){
+    pathNormalize = function(path, ensureTrailingSlashIncluded = false){
+        if(ensureTrailingSlashIncluded == true)
+            path = urlNormalize(path)
+
         return path[0] == '/' ? path.slice(1) : path
     }
 
@@ -59,7 +63,7 @@ REST <- {
                 PrettyPrinter.print({
                     "method": method,
                     "url": url,
-                    // "headers": headers,
+                    "headers": headers,
                     "body": body
                 })
             }

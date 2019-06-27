@@ -6,7 +6,7 @@
 
 REST.Losant.device <- {
     id = null           // The Losant generated Device ID
-    attributes = [],  // The Losant Attributes as returned in get or set in update or devices.create
+    attributes = [],    // The Losant Attributes as returned in get or set in update or devices.create
     tags = [            // The Losant tags as returned in get or set in update or devices.create
         {
             "key"   : "idAgent",
@@ -17,6 +17,13 @@ REST.Losant.device <- {
             "value" : imp.configparams.deviceid
         },
     ],
+
+    applicationKeyId = null,    //TODO: Not sure if this is necessary beyond deleting the key?
+    applicationKey = null,
+    applicationKeySecret = null,
+
+    _applicationKeyToken = null,
+    _applicationKeyTokenRefreshTimer = null,
 
     _path = "/devices/%s",
     //TODO: Trade out our API Token for a Device Access Key with limited permissions and use it throughout this API
@@ -77,7 +84,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("DELETE", format(this._path + "?%s", deviceID, http.urlencode(params)))
+        return this.send("DELETE", format(this._path + "?%s", deviceID, http.urlencode(params)), "", this._getAuthHeaders())
                     .then(function(body){
                         // Unset our device ID if we've just destroyed it
                         if(deviceID == this.id){
@@ -133,7 +140,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("GET", format(this._path + "?%s", deviceID, http.urlencode(params)))
+        return this.send("GET", format(this._path + "?%s", deviceID, http.urlencode(params)), "", this._getAuthHeaders())
                     .then(function(body){
                         if(deviceID == this.id){
                             // set the device ID, tags, and attributes that are returned in our device class for future use so that outside code doesn't have to remember to do this!
@@ -194,7 +201,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("GET", format(this._path + "/command?%s", deviceID, http.urlencode(params)))
+        return this.send("GET", format(this._path + "/command?%s", deviceID, http.urlencode(params)), "", this._getAuthHeaders())
     }
 
     /**
@@ -243,7 +250,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("GET", format(this._path + "/compositeState?%s", deviceID, http.urlencode(params)))
+        return this.send("GET", format(this._path + "/compositeState?%s", deviceID, http.urlencode(params)), "", this._getAuthHeaders())
     }
 
     /**
@@ -292,7 +299,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("GET", format(this._path + "/logs?%s", deviceID, http.urlencode(params)))
+        return this.send("GET", format(this._path + "/logs?%s", deviceID, http.urlencode(params)), "", this._getAuthHeaders())
     }
 
     /**
@@ -341,7 +348,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("GET", format(this._path + "/state?%s", deviceID, http.urlencode(params)))
+        return this.send("GET", format(this._path + "/state?%s", deviceID, http.urlencode(params)), "", this._getAuthHeaders())
     }
 
     /**
@@ -400,7 +407,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("PATCH", format(this._path + "?%s", deviceID, http.urlencode(params)), body)
+        return this.send("PATCH", format(this._path + "?%s", deviceID, http.urlencode(params)), body, this._getAuthHeaders())
                     .then(function(body){
                         if(deviceID == this.id){
                             // set the device ID, tags, and attributes that are returned in our device class for future use so that outside code doesn't have to remember to do this!
@@ -469,7 +476,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("POST", format(this._path + "/command?%s", deviceID, http.urlencode(params)), body, false, bodyEncoder, bodyDecoder)
+        return this.send("POST", format(this._path + "/command?%s", deviceID, http.urlencode(params)), body, this._getAuthHeaders(), false, bodyEncoder, bodyDecoder)
     }
 
     /**
@@ -518,7 +525,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("POST", format(this._path + "/state?%s", deviceID, http.urlencode(params)), body, false, bodyEncoder, bodyDecoder)
+        return this.send("POST", format(this._path + "/state?%s", deviceID, http.urlencode(params)), body, this._getAuthHeaders(), false, bodyEncoder, bodyDecoder)
     }
 
     /**
@@ -598,7 +605,7 @@ REST.Losant.device <- {
 
         params = validateAndSanitizeParams(params, validParams);
 
-        return this.send("POST", format(this._path + "/setConnectionStatus?%s", deviceID, http.urlencode(params)), body)
+        return this.send("POST", format(this._path + "/setConnectionStatus?%s", deviceID, http.urlencode(params)), body, this._getAuthHeaders())
     }
 
     /**
@@ -971,6 +978,13 @@ REST.Losant.device <- {
         }
 
         return Promise.resolve(status)
+    }
+
+    function _getAuthHeaders(){
+        local headers = {}
+        if(this._applicationKeyToken)
+            headers["Authorization"] <- format("Bearer %s", this._applicationKeyToken)
+        return headers
     }
 }
 

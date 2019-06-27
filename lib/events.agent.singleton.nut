@@ -25,7 +25,7 @@ REST.Losant.events <- {
     *       - {string} message    - description of the event
     *       - {object} data       -
     *       - {string} deviceId   - Losant Device ID of the event
-    *       - {array} eventTags  -
+    *       - {array}  eventTags  -
     *  {string} losantdomain - Domain scope of request (rarely needed)
     *  {boolean} _actions - Return resource actions in response
     *  {boolean} _links - Return resource link in response
