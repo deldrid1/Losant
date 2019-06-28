@@ -1,4 +1,4 @@
-@include once __ROOT__ + "/REST.agent.singleton.nut"
+@include once "/REST.agent.singleton.nut"
 
 // =============================================================================
 // REST_LOSANT -----------------------------------------------------------------
@@ -187,11 +187,11 @@ REST.Losant <- {
 REST.Losant.setdelegate(REST)
 
 // Now include all of our implementation!
-@include once __ROOT__ + "/lib/applicationKeys.agent.singleton.nut"
-@include once __ROOT__ + "/lib/auth.agent.singleton.nut"
-@include once __ROOT__ + "/lib/device.agent.singleton.nut"
-@include once __ROOT__ + "/lib/devices.agent.singleton.nut"
-@include once __ROOT__ + "/lib/events.agent.singleton.nut"
+@include once "/lib/applicationKeys.agent.singleton.nut"
+@include once "/lib/auth.agent.singleton.nut"
+@include once "/lib/device.agent.singleton.nut"
+@include once "/lib/devices.agent.singleton.nut"
+@include once "/lib/events.agent.singleton.nut"
 
 // =============================================================================
 // ------------------------------------------------------------- END_REST_LOSANT

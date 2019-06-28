@@ -1,4 +1,4 @@
-@include once __ROOT__ + "/REST.Losant.agent.singleton.nut"
+@include once "/REST.Losant.agent.singleton.nut"
 
 // =============================================================================
 // MAIN_APPLICATION_CODE -------------------------------------------------------
