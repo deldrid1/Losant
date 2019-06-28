@@ -1,5 +1,4 @@
-@include once "/REST.Losant.agent.singleton.nut"
-@include once "/tests/LiveTests/REST.Losant.LiveTestConfigVariables.agent.nut"
+@include once __PATH__ + "/../REST.Losant.agent.singleton.nut"
 
 class LosantBaseTest extends ImpTestCase {
 

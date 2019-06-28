@@ -1,5 +1,5 @@
-@include once "/REST.Losant.agent.singleton.nut"
-@include once "/tests/LiveTests/REST.Losant.LiveTestConfigVariables.agent.nut"
+@include once __PATH__ + "/../../REST.Losant.agent.singleton.nut"
+@include once __PATH__ + "/REST.Losant.LiveTestConfigVariables.agent.nut"
 
 
 REST.Losant.init(LOSANT_APPLICATION_ID, LOSANT_API_TOKEN)
