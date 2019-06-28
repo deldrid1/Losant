@@ -5,5 +5,4 @@
 @include once "/lib/auth.agent.singleton.nut"
 @include once "/lib/device.agent.singleton.nut"
 @include once "/lib/devices.agent.singleton.nut"
-@include once "/lib/event.agent.singleton.nut"
 @include once "/lib/events.agent.singleton.nut"
