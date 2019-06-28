@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-@include once "/REST.Losant.agent.singleton.nut"
-=======
 @include once __PATH__ + "/../REST.Losant.agent.singleton.nut"
->>>>>>> relative-includes-with-__PATH__
 
 // =============================================================================
 // MAIN_APPLICATION_CODE -------------------------------------------------------
