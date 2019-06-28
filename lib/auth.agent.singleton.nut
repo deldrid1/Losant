@@ -1,4 +1,4 @@
-@include once "/REST.Losant.agent.singleton.nut"
+@include once "/lib/REST.Losant.agent.singleton.nut"
 
 // =============================================================================
 // REST_LOSANT_DEVICES ---------------------------------------------------------
