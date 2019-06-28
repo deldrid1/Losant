@@ -1,4 +1,5 @@
-@include once "REST.agent.singleton.nut"
+@include once __ROOT__ + "/REST.Losant.agent.singleton.nut"
+@include once __ROOT__ + "/tests/LiveTests/REST.Losant.LiveTestConfigVariables.agent.nut"
 
 class RESTtest extends ImpTestCase {
 
