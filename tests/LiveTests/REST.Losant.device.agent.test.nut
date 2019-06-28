@@ -1,5 +1,5 @@
-@include once "./../../REST.Losant.agent.singleton.nut"
-@include once "./REST.Losant.LiveTestConfigVariables.agent.nut"
+@include once __PATH__ + "/../../REST.Losant.agent.singleton.nut"
+@include once __PATH__ + "/REST.Losant.LiveTestConfigVariables.agent.nut"
 
 REST._debug = true;
 

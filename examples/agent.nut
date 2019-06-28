@@ -1,4 +1,4 @@
-@include once "./../REST.Losant.agent.singleton.nut"
+@include once __PATH__ + "/../REST.Losant.agent.singleton.nut"
 
 // =============================================================================
 // MAIN_APPLICATION_CODE -------------------------------------------------------
